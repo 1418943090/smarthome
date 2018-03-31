@@ -32,3 +32,4 @@ def baidu_asr(speech_file):
  
 json_resp = baidu_asr(sys.argv[1])
 print(json_resp)
+add new
