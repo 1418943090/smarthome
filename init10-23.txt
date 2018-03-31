@@ -1,0 +1,79 @@
+
+gpio.mode(4,gpio.OUTPUT)
+wifi.setmode(wifi.STATIONAP)
+wifi.sta.config("frank","frank110")
+wifi.sta.connect()
+i=0
+j=0
+tmr.alarm(2,1000,1,function()
+      if wifi.sta.getip()==nil then
+          print("Connecting..")
+      else
+          tmr.stop(2)
+          i=1
+          print("Connecting IP is "..wifi.sta.getip())
+      end
+end)
+function split(input, delimiter)
+    input = tostring(input)
+    delimiter = tostring(delimiter)
+    if (delimiter=='') then return false end
+    local pos,arr = 0, {}
+    for st,sp in function() return string.find(input, delimiter, pos, true) end do
+        table.insert(arr, string.sub(input, pos, st - 1))
+        pos = sp + 1
+    end
+    table.insert(arr, string.sub(input, pos))
+    return arr
+end
+ tmr.alarm(3,7000,1,function()
+
+ if i==1 and j==0 then
+     m = mqtt.Client("clientid", 120)
+     m = mqtt.Client("clientid", 120, "admin", "password")
+     --m:lwt("/lwt", "offline", 0, 0)
+     m:on("connect", function(client) print ("connected") end)
+     m:on("offline", function(client) print ("offline") end)
+     m:on("message", function(client, topic, data) 
+     --print(data)
+     --print(split(data,':')[1])
+    -- name=string.sub(data,1,4)
+     --status=string.sub(data,6)
+     A=split(data,':')
+     name=tostring(A[1])
+     status=A[2]
+     print(name)
+     print(status)
+      if(name=="001") then
+            if(status=="on") then
+            gpio.write(4,gpio.LOW)
+            print("on")
+            end         
+            if(status=="off") then
+            gpio.write(4,gpio.HIGH)
+            print("off")
+            end
+      end
+     print(topic .. ":" ) 
+    if data ~= nil then
+       print(data)
+    end
+  end)
+   m:connect("192.168.137.218", 1883, 0, function(client)
+       print("connected")
+       j=1
+       tmr.stop(3)
+       
+  client:subscribe("node_information", 0, function(client) print("subscribe success") end)
+  if(gpio.read(4)==1) then
+       data="001:on"
+  else data="001:off"
+  end
+  client:publish("001", data, 0, 0, function(client) print("sent") end)
+  end,
+  function(client, reason)
+       print("failed reason: " .. reason)
+end)
+else   print("Wainting Connect...")
+end
+end)

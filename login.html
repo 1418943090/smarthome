@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html"; charset='utf-8'>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="assets/jquery.mobile-1.4.5.min.css">
+<script src="assets/jquery-2.1.4.min.js"></script>
+<script src="assets/jquery.mobile-1.4.5.min.js"></script>
+<script type="text/javascript" >
+    function login_click()
+    {
+        var account=$("#account").val();
+        if(account=="")
+       {
+           $("#none_account").popup('open');
+       }
+        else
+       { 
+          var password = $("#password").val();
+          if(password=="")
+          {
+           $("#none_password").popup('open');
+          }
+          else 
+          {
+             var data="account="+account+"&password="+password; 
+             $.ajax
+               ({
+                   url:'login.php',
+                  type:'post',
+                  data:data,
+              dataType:'text', 
+               success:function(data)
+                { 
+                  if(data=="true")
+                    self.location="HomePane2.html";//跳转到HomePane.html页面
+                  else 
+                    $("#error").popup('open');  
+                }
+               });
+          }
+       }
+    } 
+</script>
+</head>
+<body>
+   <div data-role="page">
+<!--      没有输入账号弹窗          -->
+<div data-role="popup" id="none_account" data-transition="flow" data-dismissible="false" class=" ui-content" style="max-width: 280px">
+     <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">close</a>
+     <p>&nbsp;&nbsp;请输入账号&nbsp;&nbsp;</p>
+</div>
+<!--     没有输入密码弹窗           -->
+<div data-role="popup" id="none_password" data-transition="flow" data-dismissible="false" class=" ui-content" style="max-width: 280px">
+     <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">close</a>
+     <p>&nbsp;&nbsp;请输入密码&nbsp;&nbsp;</p>
+</div>
+<!--密码或账号输入错误-->
+<div data-role="popup" id="error" data-transition="flow" data-dismissible="false" class=" ui-content" style="max-width: 280px">
+     <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">close</a>
+     <p>&nbsp;&nbsp;账号或密码输入错误&nbsp;&nbsp;</p>
+</div>
+<!-- 弹窗-->
+        <div data-role="header" data-position="fixed">
+          <h1>用户登录</h1>
+        </div>	
+        <div data-role="content">
+        <img src="assets/images/3.png" style="width:50%; margin-left: 25%;"/>
+        <form action="#" method="post"><br/><br/>
+             <input type="text" name="account" id="account" placeholder="账号:"/>
+             <input type="password" name="password" id="password" placeholder="密码:"/ >
+ <a data-role="button" data-theme="b" id="login" onclick="login_click();">登录</a> 
+        </form>
+        </div>
+  </div> 
+</body>
+</html>

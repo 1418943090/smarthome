@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html"; charset='utf-8'><!--告诉浏览器我的页面内容用的什么字符格式-->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../assets/jquery.mobile-1.4.5.min.css">
+<script src="../assets/jquery-2.1.4.min.js"></script>
+<script src="../assets/jquery.mobile-1.4.5.min.js"></script>
+<script type="text/javascript" >
+	function first_step()
+	{
+
+   $('#first_step').popup('open');
+	}
+</script>
+</head>
+<body>
+   <div data-role="page" id="pageone">
+   	<!--*****************************************************************************-->
+       <div data-role="popup" id="first_step" data-transition="turn" data-position-to="window" data-dismissible="false" class=" ui-content" style="max-width: 280px">
+     <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">close</a>
+      <h1>第一步</h1><h3>选择传感器</h3>
+     <select name="sensor" id="sensor" style="width:30%" onchange="get_data()">
+<?php
+   $con=mysqli_connect("localhost","root","huang110");
+   if(!$con)
+   {
+   }
+   else
+   {
+       mysqli_query($con,"set name 'utf8'");
+       mysqli_select_db($con,"DATA");
+       $result=mysqli_query($con,"select * from Now_Data");
+       while($row=mysqli_fetch_array($result,MYSQLI_NUM))
+       {
+         echo   "<option value=$row[1]>$row[1]</option>";
+       }
+   }
+?>
+    </select>  
+      </div>
+<!--*****************************************************************************-->
+
+        <div data-role="header" style="background:#dd393f"  data-position="fixed" data-tap-toggle="false" >
+     <!--<a  data-icon="back" data-ajax="false" data-rel="back" data-transition="turn">返回</a>-->
+        <a href="../HomePane2.html"  style="background:#dd393f" class="ui-btn-left" data-icon="arrow-l" data-iconpos="notext"></a>  
+        <h1 style="color:white">智能中心</h1>
+         </div>
+     
+             <button onclick="first_step();">添加</button>
+   </div>
+</body>
+</html>
