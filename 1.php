@@ -7,3 +7,4 @@ else
 echo "Faile";
 mysql_close();
 ?>
+add new
